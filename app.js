@@ -2,6 +2,9 @@ const express = require("express");
 
 // 加载模板处理模块
 // var swig = require('swig');
+// 初始化自定义环境变量
+const env = require('node-env-file');
+env(__dirname + '/.env');
 
 // 加载数据库模块
 const mongoose = require('mongoose');
@@ -23,10 +26,6 @@ const route = require('./routers');
 const Models = require('./database');
 const rand = require('csprng');
 const sha1 = require('sha1');
-
-// 初始化自定义环境变量
-const env = require('node-env-file');
-env(__dirname + '/.env');
 
 // 创建应用模板
 // 第一个参数：模板引擎的名称，同事也是模板文件的后缀，第二个参数表示用于u解析处理模板内容的方法
@@ -91,7 +90,8 @@ var port = 8888;
 var uri = 'http://localhost:' + port;
 
 // 创建数据库链接
-mongoose.connect(`mongodb://${process.env.DB_USER}:${process.env.DB_PWD}@localhost:27017/blog`);
+// mongoose.connect(`mongodb://${process.env.DB_USER}:${process.env.DB_PWD}@localhost:27017/blog`);
+mongoose.connect(`mongodb://localhost:27017/blog`);
 
 // 存储链接对象
 const db = mongoose.connection;
