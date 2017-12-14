@@ -11,7 +11,7 @@ const createToken = (id, name) => {
             id: id,
             name: name
         },
-        process.env.cert,
+        process.env.CERT,
         {
             expiresIn: '7d'
         }
