@@ -1,5 +1,8 @@
 const express = require("express");
 
+// gzip处理模块
+const compression = require('compression');
+
 // 加载模板处理模块
 // var swig = require('swig');
 // 初始化自定义环境变量
@@ -44,10 +47,24 @@ const sha1 = require('sha1');
 app.use(bodyParser.urlencoded({extended:true}));
 app.use(bodyParser.json());
 
+// 处理gzip
+app.use(compression({filter: function(req, res) {
+    if (req.headers['x-no-compression']) {
+      // 这里就过滤掉了请求头包含'x-no-compression'
+      return false
+    }
+  
+    return compression.filter(req, res)
+  }
+}));
+
 //设置跨域访问
 app.all('*', function(req, res, next) {
+    if( req.headers.origin.indexOf("iskcy" != -1) ){ 
+        res.header("Access-Control-Allow-Origin", req.headers.origin);
+    } 
     res.header("Access-Control-Allow-Origin", "*");
-    res.header('Access-Control-Allow-Headers', 'Content-Type, Content-Length, Authorization, Accept, X-Requested-With , yourHeaderFeild');
+    res.header('Access-Control-Allow-Headers', 'Content-Type, Content-Length, Authorization, Accept, X-Requested-With');
     res.header("Access-Control-Allow-Methods","PUT,POST,GET,DELETE,OPTIONS");
     // res.header("X-Powered-By",' 3.2.1');
     res.header("Content-Type", "application/json;charset=utf-8");
